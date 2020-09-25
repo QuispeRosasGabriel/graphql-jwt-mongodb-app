@@ -5,6 +5,7 @@ import schema from "./schema";
 import { ApolloServer } from "apollo-server-express";
 import { createServer } from "http";
 import environments from "./config/environments";
+import { Database } from "./config/database";
 
 if (process.env.NODE_ENV !== "production") {
   const envs = environments;
@@ -17,6 +18,9 @@ const init = async () => {
   app.use("*", cors());
 
   app.use(compression());
+
+  const database = new Database();
+  const db = await database.init();
 
   const server = new ApolloServer({
     schema,
