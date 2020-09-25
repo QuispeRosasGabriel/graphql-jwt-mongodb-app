@@ -22,8 +22,13 @@ const init = async () => {
   const database = new Database();
   const db = await database.init();
 
+  const context: any = async ({ req, connection }: any) => {
+    return { db };
+  };
+
   const server = new ApolloServer({
     schema,
+    context,
     introspection: true,
   });
 
