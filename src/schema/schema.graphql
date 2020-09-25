@@ -2,7 +2,7 @@ type Query {
   "Obtenemos la lista de usuarios"
   users: [User!]!
   "Iniciamos sesion en el sistema"
-  login(email: String!, password: String!): User!
+  login(email: String!, password: String!): ResultUser!
   "Obtener nuestra información con el token"
   me: User!
 }
