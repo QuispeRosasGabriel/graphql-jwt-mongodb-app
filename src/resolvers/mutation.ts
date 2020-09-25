@@ -10,7 +10,6 @@ const mutation: IResolvers = {
         .limit(1)
         .sort({ registerDate: -1 })
         .toArray();
-      console.log("ver lastuser", lastUser);
 
       if (lastUser.length === 0) {
         user.id = 1;
@@ -18,8 +17,24 @@ const mutation: IResolvers = {
         user.id = lastUser[0].id ? lastUser[0].id + 1 : Math.random().toFixed();
       }
       user.registerDate = new Datetime().getCurrentDateTime();
-      await db.collection("users").insertOne(user);
-      return user;
+      return await db
+        .collection("users")
+        .insertOne(user)
+        .then((result: any) => {
+          return {
+            status: true,
+            message: `Usuario: ${user.name} ${user.lastname} ha sido añadido correctamente`,
+            user,
+          };
+        })
+        .catch((err: any) => {
+          return {
+            status: false,
+            message: "Ocurrió un error, usuario no fue añadido correctamente",
+            user: null,
+          };
+        });
+      // return user;
     },
   },
 };
