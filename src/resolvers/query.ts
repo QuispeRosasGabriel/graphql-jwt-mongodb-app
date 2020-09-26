@@ -1,4 +1,5 @@
 import { IResolvers } from "graphql-tools";
+import JWT from "../lib/jwt";
 
 const query: IResolvers = {
   Query: {
@@ -7,30 +8,28 @@ const query: IResolvers = {
     },
 
     async login(_: void, { email, password }, { db }): Promise<any> {
-      return await db
-        .collection("users")
-        .findOne({ email, password })
-        .then((res: any) => {
-          if (res === null) {
-            return {
-              status: false,
-              message: "Login Incorrecto, comprueba la información",
-              user: null,
-            };
-          }
-          return {
-            status: true,
-            message: "Login Correcto",
-            user: res,
-          };
-        })
-        .catch((err: any) => {
-          return {
-            status: false,
-            message: "Error inesperado",
-            user: "null",
-          };
-        });
+      const user = await db.collection("users").findOne({ email });
+      if (user === null) {
+        return {
+          status: false,
+          message: "Login Incorrecto, no existe el usuario",
+          token: null,
+        };
+      }
+
+      if (password !== user.password) {
+        return {
+          status: false,
+          message: "Login Incorrecto, contraseña incorrecta",
+          token: null,
+        };
+      }
+
+      return {
+        status: true,
+        message: "Login Correcto",
+        token: new JWT().sign({ user }),
+      };
     },
   },
 };

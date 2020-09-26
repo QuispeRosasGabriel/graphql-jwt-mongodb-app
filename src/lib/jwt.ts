@@ -1,7 +1,7 @@
 import { SECRET_KEY } from "../config/constants";
 import jwt from "jsonwebtoken";
 
-export class JWT {
+class JWT {
   private secretKey = SECRET_KEY as string;
 
   sign(data: any): string {
@@ -18,3 +18,5 @@ export class JWT {
     }
   }
 }
+
+export default JWT;
