@@ -32,6 +32,22 @@ const query: IResolvers = {
         token: new JWT().sign({ user }),
       };
     },
+
+    me(_: void, __: any, { token }) {
+      let info: any = new JWT().verify(token);
+      if (info === "La autenticación del token es invalida") {
+        return {
+          status: false,
+          message: info,
+          user: null,
+        };
+      }
+      return {
+        status: true,
+        message: "Token Correcto",
+        user: info.user,
+      };
+    },
   },
 };
 
