@@ -24,7 +24,7 @@ const query: IResolvers = {
           token: null,
         };
       }
-
+      user.password = ":)";
       return {
         status: true,
         message: "Login Correcto",
